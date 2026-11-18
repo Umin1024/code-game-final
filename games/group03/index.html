@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- head：这份文件的说明、设置和所需资源 -->
+  <!-- 是网页交给浏览器看的设置区 -->
+
+  <meta charset="UTF-8">
+  <!-- 这个 HTML 文件的文字采用 UTF-8 编码。
+   UTF-8 可以表示中文、英文和许多其他语言的字符。
+   通常把它放在 <head> 的前面，让浏览器尽早知道该用什么方式读取文字；
+   如果编码不匹配，中文可能会显示成乱码。 -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- viewport:让网页在手机等不同宽度的屏幕上正确显示。 -->
+
+  <title>Server Hunting</title>
+  <!-- 网页标题，常显示在浏览器标签页上。 -->
+
+  <link rel="stylesheet" href="style.css" />
+  <!-- 上面这行很特别，写了html的文件才能关联到左边style.css文件 -->
+</head>
+
+<body>
+<a href="../../index.html#treasure" aria-label="返回唱片店寻宝游戏区" style="position:fixed;top:12px;right:12px;z-index:1000;padding:9px 14px;border:2px solid #343334;border-radius:20px;background:#f6e4bf;color:#343334;text-decoration:none;font:700 13px sans-serif">← 返回唱片店</a>
+  <!-- body：网页里实际呈现给访问者的内容 -->
+
+  <div class="block">
+    <h1>哦哈哟哇 Welcome Welcome</h1>
+      <hr style="border: none; border-top: 1px solid #ff1495;">
+      <!-- 空格也要写特殊的代码：&nbsp; -->
+      开始&nbsp;&nbsp;寻找
+    </p>
+  </div>
+
+  <div class="block">
+    <h2>来看看小提示</h2>
+
+    <!-- 如果只改变单行风格，可以将效果直接写在tag里，语法：style=" 视觉效果 " -->
+    <p style="font-weight: bold;"> [LOG_01]<br>有些东西不结果，却会回应风</p>
+    <!-- 加个边框吧，它的宽度用了width,可以试着删掉“width: fit-content;”有什么效果-->
+    <p style="border: 2px solid rgb(211, 41, 120); width: fit-content; ">  [LOG_02]<br>希望你带了花露水因为蚊子超多</p>
+    <!-- 颜色是可以单独修改的 -->
+    <p style="background: rgb(30, 184, 158); color:rgb(251, 251, 252);width: fit-content; ">  [LOG_03]<br>闻到树的清香，记得看鸟儿</p>
+    <p style="opacity: 0.5">  [LOG_04]<br>浓烈气味信号已检测</p>
+    <p style="filter: blur(1px)">  [LOG_05]<br>有人在树上烤串儿吗？居然没配了绿色的啤酒吗？</p>
+
+    <!-- 但我们也可以批量的修改，那就需要写在左边css文档里,这里要写class-->
+    <div class="cute-text">
+      <p>Wish U Luck, victory is AWAITING!!!!</p>
+    </div>
+  </div>
+
+<div class="block">
+    <h1>END OF RECORD</h1>
+      <br>
+      <!-- 空格也要写特殊的代码：&nbsp; -->
+      开始&nbsp;&nbsp;寻找
+    </p>
+  </div>
+
+  <div class="block">
+    <h2>线索</h2>
+    <img src="1111.jpg" alt="一些神秘线索">
+  </div>
+
+
+</body>
+
+</html>

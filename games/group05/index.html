@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- head：这份文件的说明、设置和所需资源 -->
+  <!-- 是网页交给浏览器看的设置区 -->
+
+  <meta charset="UTF-8">
+  <!-- 这个 HTML 文件的文字采用 UTF-8 编码。
+   UTF-8 可以表示中文、英文和许多其他语言的字符。
+   通常把它放在 <head> 的前面，让浏览器尽早知道该用什么方式读取文字；
+   如果编码不匹配，中文可能会显示成乱码。 -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- viewport:让网页在手机等不同宽度的屏幕上正确显示。 -->
+
+  <title>Server Hunting</title>
+  <!-- 网页标题，常显示在浏览器标签页上。 -->
+
+  <link rel="stylesheet" href="style.css" />
+  <!-- 上面这行很特别，写了html的文件才能关联到左边style.css文件 -->
+</head>
+
+<body>
+<a href="../../index.html#treasure" aria-label="返回唱片店寻宝游戏区" style="position:fixed;top:12px;right:12px;z-index:1000;padding:9px 14px;border:2px solid #343334;border-radius:20px;background:#f6e4bf;color:#343334;text-decoration:none;font:700 13px sans-serif">← 返回唱片店</a>
+  <!-- body：网页里实际呈现给访问者的内容 -->
+
+  <div class="block">
+    <h1 style="color: #23d938;">这里是一个黑黑的地方</h1>
+    <p>旁边都是车子和草👉🏻 <br>
+      某个入口旁边
+      <br>
+      <!-- 空格也要写特殊的代码：&nbsp; -->
+      想起一种甜的食物&nbsp;&nbsp;
+    </p>
+  </div>
+
+  <div class="block">
+    <h2 style="color: #23d938;">五感</h2>
+
+    <!-- 如果只改变单行风格，可以将效果直接写在tag里，语法：style=" 视觉效果 " -->
+    <p style="font-weight: bold;"> 听到猫叫</p>
+    <!-- 加个边框吧，它的宽度用了width,可以试着删掉“width: fit-content;”有什么效果-->
+    <p style="border: 1px solid rgb(175, 53, 53); width: fit-content; "> 闻到花香</p>
+    <!-- 颜色是可以单独修改的 -->
+    <p style="background: pink; color:rgb(251, 251, 252); "> 可以看到rice</p>
+    <p style="transform: rotate(20deg); width: fit-content;"> 摸到绝缘体</p>
+    <p style="opacity: 0.5"> 到达世界最东处</p>
+    <p style="filter: blur(2px)"> </p>
+
+    <!-- 但我们也可以批量的修改，那就需要写在左边css文档里,这里要写class-->
+    <div class="cute-text">
+      <p>guess what</p>
+    </div>
+  </div>
+
+
+  <div class="block">
+    <h2 class="rainbow-flash">非人视角</h2>
+
+    <!-- ul是一个篮子 -->
+    <ul>
+      <!-- <li>是篮子里的东西 -->
+      <li>撞我会失去money，降低恩格尔系数</li>
+      <li>人撞我不用失去money，失去一些真皮细胞</li>
+      <li>如果我只有5cm，我应该在车底，看见高楼大厦</li>
+      <li>它的全世界是窄窄的，非球形</li>
+      <li style="filter: blur(1px)">诅咒：找不找到它</li>
+      <li class="sliding-text-container">它的存在个体有很多，四轮物体不喜欢它</li>
+      <li class="fading-text-container">有些历史感</li>
+    </ul>
+
+    <p class="rotating-text-container">嘿哈</p>
+  </div>
+
+  <div class="block">
+    <h2 style="color: #23d938;">没有问题，氛围感装潢</h2>
+    <img src="banana.jpg" alt="室内装潢">
+  </div>
+
+
+</body>
+
+</html>

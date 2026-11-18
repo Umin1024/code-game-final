@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>寻物线索 · 解谜开始</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="../../index.html#treasure" aria-label="返回唱片店寻宝游戏区" style="position:fixed;top:12px;right:12px;z-index:1000;padding:9px 14px;border:2px solid #343334;border-radius:20px;background:#f6e4bf;color:#343334;text-decoration:none;font:700 13px sans-serif">← 返回唱片店</a>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">A LITTLE TREASURE HUNT</p>
+      <h1>寻物线索</h1>
+      <p class="subtitle">答对小问题，逐步揭开藏起来的秘密。</p>
+      <div class="ornament" aria-hidden="true"><span></span> ✦ <span></span></div>
+    </header>
+
+    <div class="progress" aria-label="解锁进度">
+      <span class="progress-label" id="progressLabel">已解锁 0 / 3 条线索</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <section class="clues" aria-label="三个寻找线索">
+      <article class="clue-card" id="card1">
+        <div class="clue-number">CLUE 01</div>
+        <div class="question-panel" id="question1">
+          <div class="lock-icon" aria-hidden="true">✦</div>
+          <h2>回答问题，解锁线索一</h2>
+          <p class="question">草的英文是什么？</p>
+          <form class="answer-form" data-clue="1">
+            <label class="sr-only" for="answer1">输入草的英文</label>
+            <input id="answer1" name="answer" type="text" placeholder="输入英文单词" autocomplete="off" required>
+            <button type="submit">确认答案</button>
+          </form>
+          <p class="feedback" id="feedback1" aria-live="polite"></p>
+        </div>
+        <div class="clue-content blurred" id="content1" aria-hidden="true">
+          <div class="grass-art" aria-hidden="true">
+            <span class="sun"></span>
+            <span class="grass-blade blade-1"></span><span class="grass-blade blade-2"></span>
+            <span class="grass-blade blade-3"></span><span class="grass-blade blade-4"></span>
+            <span class="grass-blade blade-5"></span><span class="grass-blade blade-6"></span>
+            <span class="ground"></span>
+          </div>
+          <h2>从草地开始</h2>
+          <p>先去找一片绿意盎然的草坪。<br>答案，就藏在这片风景附近。</p>
+          <span class="card-foot">寻找地点 · 草坪</span>
+        </div>
+        <div class="unlock-stamp" id="stamp1" hidden>线索已解锁 ✓</div>
+      </article>
+
+      <article class="clue-card locked" id="card2">
+        <div class="clue-number">CLUE 02</div>
+        <div class="question-panel hidden" id="question2">
+          <div class="lock-icon" aria-hidden="true">✦</div>
+          <h2>回答问题，解锁线索二</h2>
+          <p class="question">4 + 6 = ？</p>
+          <form class="answer-form" data-clue="2">
+            <label class="sr-only" for="answer2">输入计算结果</label>
+            <input id="answer2" name="answer" type="number" placeholder="输入数字" required>
+            <button type="submit">确认答案</button>
+          </form>
+          <p class="feedback" id="feedback2" aria-live="polite"></p>
+        </div>
+        <div class="clue-content blurred" id="content2" aria-hidden="true">
+          <div class="stone-art" aria-label="刻有桃李满天下的石碑">
+            <div class="stone-top"></div>
+            <div class="stone-face"><span>桃李</span><span>满天下</span></div>
+            <div class="stone-base"></div>
+          </div>
+          <h2>找到那块石碑</h2>
+          <p>留意写着「桃李满天下」的石碑。<br>仔细看看它的下方。</p>
+          <span class="card-foot">关键标记 · 桃李满天下</span>
+        </div>
+        <div class="unlock-stamp" id="stamp2" hidden>线索已解锁 ✓</div>
+        <div class="waiting-cover" id="waiting2"><span>🔒</span><p>请先解开线索一</p></div>
+      </article>
+
+      <article class="clue-card locked" id="card3">
+        <div class="clue-number">CLUE 03</div>
+        <div class="question-panel hidden" id="question3">
+          <div class="lock-icon" aria-hidden="true">✦</div>
+          <h2>最后一步</h2>
+          <p class="question">点击下方的「叶子」，看看会发生什么。</p>
+          <button class="leaf-trigger" id="leafTrigger" type="button" aria-label="点击叶子揭开第三条线索">
+            <span class="rotating-leaves" aria-hidden="true">
+              <span>叶子</span><span>叶子</span><span>叶子</span><span>叶子</span><span>叶子</span><span>叶子</span>
+            </span>
+            <span class="tap-hint">点击揭晓</span>
+          </button>
+          <p class="feedback" id="feedback3" aria-live="polite"></p>
+        </div>
+        <div class="clue-content blurred" id="content3" aria-hidden="true">
+          <div class="leaves-art" aria-label="逐渐淡出的黄色叶子文字">
+            <span class="leaf-word leaf-1">叶子</span>
+            <span class="leaf-word leaf-2">叶子</span>
+            <span class="leaf-word leaf-3">叶子</span>
+            <span class="leaf-word leaf-4">叶子</span>
+            <span class="leaf-word leaf-5">叶子</span>
+            <span class="leaf-word leaf-6">叶子</span>
+          </div>
+          <h2>让落叶退场</h2>
+          <p>黄色的「叶子」一层层淡去……<br>试着轻轻拨开石碑下的落叶。</p>
+          <span class="card-foot">最后一步 · 拿开树叶</span>
+        </div>
+        <div class="unlock-stamp" id="stamp3" hidden>全部线索已揭晓 ✓</div>
+        <div class="waiting-cover" id="waiting3"><span>🔒</span><p>请先解开线索二</p></div>
+      </article>
+    </section>
+
+    <footer>
+      <span class="footer-line"></span>
+      <p>放慢脚步，仔细观察。祝你寻宝成功！</p>
+      <span class="footer-line"></span>
+    </footer>
+    <p class="reset-row"><button type="button" id="resetButton" class="reset-button">重新开始</button></p>
+  </main>
+
+  <script>
+    (() => {
+      const total = 3;
+      let unlocked = 0;
+
+      function updateProgress() {
+        const progressLabel = document.getElementById('progressLabel');
+        const progressFill = document.getElementById('progressFill');
+        progressLabel.textContent = `已解锁 ${unlocked} / ${total} 条线索`;
+        progressFill.style.width = `${(unlocked / total) * 100}%`;
+      }
+
+      function unlockClue(number) {
+        const card = document.getElementById(`card${number}`);
+        const question = document.getElementById(`question${number}`);
+        const content = document.getElementById(`content${number}`);
+        const stamp = document.getElementById(`stamp${number}`);
+        const waiting = document.getElementById(`waiting${number}`);
+
+        if (!card || !question || !content || !stamp) return;
+
+        card.classList.remove('locked');
+        card.classList.add('unlocked');
+        question.classList.add('hidden');
+        content.classList.remove('blurred');
+        content.setAttribute('aria-hidden', 'false');
+        stamp.hidden = false;
+        if (waiting) waiting.hidden = true;
+
+        unlocked = number;
+        updateProgress();
+
+        if (number < total) {
+          const next = number + 1;
+          const nextCard = document.getElementById(`card${next}`);
+          const nextQuestion = document.getElementById(`question${next}`);
+          const nextWaiting = document.getElementById(`waiting${next}`);
+
+          if (nextCard && nextQuestion && nextWaiting) {
+            nextCard.classList.remove('locked');
+            nextQuestion.classList.remove('hidden');
+            nextWaiting.hidden = true;
+          }
+        }
+      }
+
+      document.querySelectorAll('.answer-form').forEach((form) => {
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const number = Number(form.dataset.clue);
+          const input = form.querySelector('input');
+          const feedback = document.getElementById(`feedback${number}`);
+          const answer = input.value.trim().toLowerCase();
+          const isCorrect = number === 1 ? answer === 'grass' : answer === '10';
+
+          if (isCorrect) {
+            feedback.textContent = '回答正确！线索正在揭晓……';
+            feedback.className = 'feedback success';
+            window.setTimeout(() => unlockClue(number), 450);
+          } else {
+            feedback.textContent = number === 1 ? '再想一想：草的英文是一个常见的单词。' : '答案不对，再算一次试试。';
+            feedback.className = 'feedback error';
+            input.select();
+          }
+        });
+      });
+
+      const leafTrigger = document.getElementById('leafTrigger');
+      leafTrigger.addEventListener('click', () => {
+        if (unlocked < 2) {
+          const feedback = document.getElementById('feedback3');
+          feedback.textContent = '请先完成前面的线索，再揭开最后一层。';
+          feedback.className = 'feedback error';
+          return;
+        }
+
+        const feedback = document.getElementById('feedback3');
+        feedback.textContent = '落叶拨开了！';
+        feedback.className = 'feedback success';
+        leafTrigger.classList.add('clicked');
+        window.setTimeout(() => unlockClue(3), 450);
+      });
+
+      document.getElementById('resetButton').addEventListener('click', () => {
+        unlocked = 0;
+
+        for (let number = 1; number <= total; number++) {
+          const card = document.getElementById(`card${number}`);
+          const question = document.getElementById(`question${number}`);
+          const content = document.getElementById(`content${number}`);
+          const stamp = document.getElementById(`stamp${number}`);
+          const waiting = document.getElementById(`waiting${number}`);
+          const feedback = document.getElementById(`feedback${number}`);
+          const form = card.querySelector('form');
+
+          card.classList.toggle('locked', number !== 1);
+          card.classList.remove('unlocked');
+          question.classList.toggle('hidden', number !== 1);
+          content.classList.add('blurred');
+          content.setAttribute('aria-hidden', 'true');
+          stamp.hidden = true;
+          if (feedback) {
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+          }
+          if (form) form.reset();
+          if (waiting) waiting.hidden = number === 1 ? true : false;
+        }
+
+        document.getElementById('leafTrigger').classList.remove('clicked');
+        updateProgress();
+      });
+
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>

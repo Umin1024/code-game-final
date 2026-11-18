@@ -1,0 +1,90 @@
+/* 整个文档默认样式 */
+body {
+    /* 选个字体 */
+    font-family: sans-serif;
+    /* 背景颜色 */
+    background-color: #000000f9;
+    /* 默认文字颜色，可以被后面的设定覆盖 */
+    color: #00cb5b;
+    font-size: 20px;
+    /* 内边距 - 元素和它的边框之间的距离 */
+    padding: 40px;
+
+    /* 文字居左，可以改成center居中，right居右 */
+    text-align: left;
+text-shadow:
+        0 0 1px hsl(0, 0%, 100%),
+        0 0 4px #1eec74,
+        0 0 5px rgba(211, 247, 9, 0.5);
+}
+
+/* 下面就是index.html里class对应的名字。注意，名字前加“.” */
+.cute-text {
+    color: #6cac4f;
+    transform: rotate(5deg);
+    width: fit-content;
+}
+
+
+.block {
+    margin-bottom: 100px;
+}
+
+/* 1. 滑入 */
+.sliding-text-container {
+    font-size: 20px;
+    color: #e7a013;
+    /* 速度改这里的5s试试 */
+    animation: slide-in 15s linear infinite;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+
+}
+
+/* 2. 渐深 */
+.fading-text-container {
+    font-weight: bold;
+    color: #d1d1d1;
+    /* 注意这里的fade-in是名字 */
+    animation: fade-in 20s linear;
+    /* 鼠标悬停在linear infinite，点击MDN Reference查看更多效果 */
+}
+
+/* 这个fade-in就是调整animation效果 */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* 3.旋转 */
+.rotating-text-container {
+    color: #810af0;
+    width: fit-content;
+    text-align: left;
+    transform-origin: center center;
+    animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

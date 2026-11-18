@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>雨中的故事</title>
+  <style>
+    /* ===== 全局重置 ===== */
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: #f5f8fc;
+    }
+
+    body {
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* ===== 雨背景画布 ===== */
+    #rainCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== 左侧循环下落的“雨滴”文字 ===== */
+    .rain-words {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 120px;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.55;
+    }
+
+    .rain-column {
+      position: absolute;
+      top: 0;
+      width: 40px;
+      text-align: center;
+      font-family: "Songti SC", "Noto Serif SC", "SimSun", serif;
+      color: #8aa9c9;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      line-height: 1.6;
+      animation: fall linear infinite;
+      white-space: pre-line;
+    }
+
+    .rain-column span {
+      display: block;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-120%); }
+      100% { transform: translateY(120vh); }
+    }
+
+    .rain-column:nth-child(1) {
+      left: 8px;
+      animation-duration: 6s;
+      animation-delay: 0s;
+      font-size: 1.05rem;
+      opacity: 0.9;
+    }
+    .rain-column:nth-child(2) {
+      left: 44px;
+      animation-duration: 8s;
+      animation-delay: 1.8s;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    .rain-column:nth-child(3) {
+      left: 78px;
+      animation-duration: 7s;
+      animation-delay: 3.2s;
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    /* ===== 页面主内容容器 ===== */
+    .page {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 12vh 2rem 6rem 140px;
+    }
+
+    /* ===== 故事文字 ===== */
+    .story {
+      font-family: "Songti SC", "Noto Serif SC", "SimSun", serif;
+      color: #2c3e50;
+      line-height: 2.4;
+      font-size: 1.25rem;
+      letter-spacing: 0.06em;
+      user-select: none;
+    }
+
+    .story p {
+      margin: 0 0 2em 0;
+    }
+
+    /* 黄色房子 */
+    .house {
+      color: #d4a017;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      border-bottom: 2px solid rgba(212, 160, 23, 0.35);
+      padding-bottom: 0.1em;
+    }
+    .house2 {
+      color: #e8c84a;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      border-bottom: 2px solid rgba(232, 200, 74, 0.35);
+      padding-bottom: 0.1em;
+    }
+
+    /* 三元环方向 */
+    .cycle {
+      color: #5b8cae;
+      font-style: italic;
+      display: inline-block;
+      transform: rotate(-3deg);
+      font-size: 1.35rem;
+      letter-spacing: 0.08em;
+    }
+
+    /* 石像方向 */
+    .statue {
+      color: #7f8c8d;
+      font-weight: 600;
+      display: inline-block;
+      transform: rotate(2deg);
+      letter-spacing: 0.1em;
+    }
+
+    /* 橘子 */
+    .orange {
+      color: #e67e22;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    /* 对面房子 —— 灰白色 */
+    .opposite-house {
+      color: #b0b8bf;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      border-bottom: 2px solid rgba(176, 184, 191, 0.35);
+      padding-bottom: 0.1em;
+    }
+
+    /* ===== 三圆环互动区 ===== */
+    .rings-stage {
+      margin-top: 3rem;
+      text-align: center;
+      user-select: none;
+    }
+
+    .rings-hint {
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-size: 0.9rem;
+      color: #9aa8b8;
+      letter-spacing: 0.15em;
+      margin-bottom: 1.2rem;
+    }
+
+    .rings-area {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background: rgba(245, 248, 252, 0.55);
+      border-radius: 12px;
+      border: 1px dashed rgba(150, 170, 200, 0.4);
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    /* 每个圆环 */
+    .ring {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 3px solid rgba(150, 170, 200, 0.75);
+      cursor: grab;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: rgba(245, 248, 252, 0.4);
+    }
+
+    .ring:active {
+      cursor: grabbing;
+    }
+
+    .ring:nth-child(1) {
+      left: 15%;
+      top: 70px;
+      border-color: rgba(140, 165, 200, 0.8);
+    }
+    .ring:nth-child(2) {
+      left: 42%;
+      top: 40px;
+      border-color: rgba(155, 175, 205, 0.8);
+    }
+    .ring:nth-child(3) {
+      left: 68%;
+      top: 90px;
+      border-color: rgba(130, 160, 195, 0.8);
+    }
+
+    .ring.dragging {
+      box-shadow: 0 6px 20px rgba(130, 160, 200, 0.25);
+      border-color: rgba(100, 140, 190, 0.95);
+    }
+
+    /* 成功提示 */
+    .success-tip {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: #7f8c8d;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      text-shadow: 0 2px 12px rgba(245, 248, 252, 0.9);
+    }
+
+    .success-tip.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 600px) {
+      .page {
+        padding: 8vh 1.2rem 4rem 80px;
+      }
+      .story {
+        font-size: 1.1rem;
+      }
+      .house, .house2 { font-size: 1.3rem; }
+      .rain-words { width: 70px; }
+      .rain-column { font-size: 0.85rem; }
+      .rain-column:nth-child(2) { left: 32px; }
+      .rain-column:nth-child(3) { left: 52px; }
+      .rings-area { height: 200px; }
+      .ring { width: 72px; height: 72px; }
+      .success-tip { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+<a href="../../index.html#treasure" aria-label="返回唱片店寻宝游戏区" style="position:fixed;top:12px;right:12px;z-index:1000;padding:9px 14px;border:2px solid #343334;border-radius:20px;background:#f6e4bf;color:#343334;text-decoration:none;font:700 13px sans-serif">← 返回唱片店</a>
+  <!-- 静态雨背景画布 -->
+  <canvas id="rainCanvas"></canvas>
+
+  <!-- 左侧循环下落的“雨滴”文字 -->
+  <div class="rain-words" aria-hidden="true">
+    <div class="rain-column"><span>雨</span><span>滴</span></div>
+    <div class="rain-column"><span>雨</span><span>滴</span></div>
+    <div class="rain-column"><span>雨</span><span>滴</span></div>
+  </div>
+
+  <!-- 页面主内容（可滚动） -->
+  <div class="page">
+    <!-- 故事文字 -->
+    <div class="story">
+      <p>今天我要出门，</p>
+      <p>我看到<span class="house">黄色</span>旁边还是<span class="house2">黄色</span>。</p>
+      <p>我感觉<span class="cycle">三元环中第三个杯子的方向</span>很特别。</p>
+      <p>走进一看，<span class="statue">石像</span>好像想吃对面<span class="orange">绿色</span>的<span class="orange">橘子</span>。</p>
+      <p>想问对面<span class="opposite-house">房子</span>的人是否能吃，</p>
+      <p>没人回应我。</p>
+      <p>这个时候我又通过<span class="cycle">三元环</span>对应上主人的信息，</p>
+      <p>再蹲下再看，</p>
+      <p>找到了我想要的。</p>
+    </div>
+
+    <!-- 三圆环互动区 -->
+    <div class="rings-stage">
+      <div class="rings-hint">拖动圆环，拼出那个数字</div>
+      <div class="rings-area" id="ringsArea">
+        <div class="ring" data-ring="1"></div>
+        <div class="ring" data-ring="2"></div>
+        <div class="ring" data-ring="3"></div>
+        <div class="success-tip" id="successTip">80</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ===== 雨背景 =====
+      const canvas = document.getElementById('rainCanvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+
+      function draw() {
+        ctx.fillStyle = '#f5f8fc';
+        ctx.fillRect(0, 0, width, height);
+
+        const count = 90;
+        ctx.lineCap = 'round';
+        for (let i = 0; i < count; i++) {
+          const x = Math.random() * width;
+          const y = Math.random() * height;
+          const len = 10 + Math.random() * 18;
+          const angle = 0.15;
+          const dx = Math.sin(angle) * len;
+          const dy = Math.cos(angle) * len;
+
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(150, 170, 200, ${0.15 + Math.random() * 0.2})`;
+          ctx.lineWidth = 0.8 + Math.random() * 0.8;
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + dx, y + dy);
+          ctx.stroke();
+        }
+      }
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        draw();
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      // ===== 三圆环拖动 + 拼80检测（严格版） =====
+      const area = document.getElementById('ringsArea');
+      const successTip = document.getElementById('successTip');
+      const rings = Array.from(document.querySelectorAll('.ring'));
+
+      let activeRing = null;
+      let offsetX = 0, offsetY = 0;
+      let hasShownSuccess = false;
+
+      function getAreaRect() {
+        return area.getBoundingClientRect();
+      }
+
+      function onPointerDown(e) {
+        const ring = e.currentTarget;
+        activeRing = ring;
+        ring.classList.add('dragging');
+
+        const rect = ring.getBoundingClientRect();
+        const clientX = e.clientX ?? e.touches?.[0]?.clientX;
+        const clientY = e.clientY ?? e.touches?.[0]?.clientY;
+
+        offsetX = clientX - rect.left;
+        offsetY = clientY - rect.top;
+
+        rings.forEach(r => r.style.zIndex = '1');
+        ring.style.zIndex = '10';
+      }
+
+      function onPointerMove(e) {
+        if (!activeRing) return;
+        e.preventDefault();
+
+        const clientX = e.clientX ?? e.touches?.[0]?.clientX;
+        const clientY = e.clientY ?? e.touches?.[0]?.clientY;
+
+        const areaRect = getAreaRect();
+        const ringRect = activeRing.getBoundingClientRect();
+        const ringW = ringRect.width;
+        const ringH = ringRect.height;
+
+        let newLeft = clientX - areaRect.left - offsetX;
+        let newTop  = clientY - areaRect.top  - offsetY;
+
+        newLeft = Math.max(0, Math.min(newLeft, areaRect.width - ringW));
+        newTop  = Math.max(0, Math.min(newTop,  areaRect.height - ringH));
+
+        activeRing.style.left = newLeft + 'px';
+        activeRing.style.top  = newTop  + 'px';
+
+        checkCombo();
+      }
+
+      function onPointerUp() {
+        if (activeRing) {
+          activeRing.classList.remove('dragging');
+          activeRing = null;
+        }
+        checkCombo();
+      }
+
+      function checkCombo() {
+        if (rings.length !== 3) return;
+
+        const areaRect = getAreaRect();
+        const centers = rings.map(ring => {
+          const r = ring.getBoundingClientRect();
+          return {
+            x: r.left - areaRect.left + r.width / 2,
+            y: r.top  - areaRect.top  + r.height / 2,
+            w: r.width
+          };
+        });
+
+        const sortedByX = [...centers].sort((a, b) => a.x - b.x);
+        const leftA = sortedByX[0];
+        const leftB = sortedByX[1];
+        const rightC = sortedByX[2];
+
+        const dxLeftPair = Math.abs(leftA.x - leftB.x);
+        const dxToC1 = Math.abs(leftA.x - rightC.x);
+        const dxToC2 = Math.abs(leftB.x - rightC.x);
+        const minDxToC = Math.min(dxToC1, dxToC2);
+
+        const dyLeftPair = Math.abs(leftA.y - leftB.y);
+        const avgYLeft = (leftA.y + leftB.y) / 2;
+        const dyRightToLeftAvg = Math.abs(rightC.y - avgYLeft);
+
+        const isLeftPairCloseX = dxLeftPair < 50;
+        const isLeftPairStackedY = dyLeftPair > 30 && dyLeftPair < 140;
+        const isRightSeparatedX = minDxToC > 100;
+        const isRightCenteredY = dyRightToLeftAvg < 60;
+
+        const matched = isLeftPairCloseX && isLeftPairStackedY &&
+                        isRightSeparatedX && isRightCenteredY;
+
+        if (matched && !hasShownSuccess) {
+          successTip.classList.add('show');
+          hasShownSuccess = true;
+        } else if (!matched && hasShownSuccess) {
+          successTip.classList.remove('show');
+          hasShownSuccess = false;
+        }
+      }
+
+      rings.forEach(ring => {
+        ring.addEventListener('mousedown', onPointerDown);
+        ring.addEventListener('touchstart', onPointerDown, { passive: false });
+      });
+
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('touchmove', onPointerMove, { passive: false });
+      window.addEventListener('mouseup', onPointerUp);
+      window.addEventListener('touchend', onPointerUp);
+      window.addEventListener('touchcancel', onPointerUp);
+
+      window.addEventListener('load', () => {
+        setTimeout(checkCombo, 300);
+      });
+    })();
+  </script>
+</body>
+</html>

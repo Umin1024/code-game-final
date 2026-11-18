@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>烧脑寻宝：失落的猫条 🐈</title>
+    <style>
+        :root {
+            --primary: #00FFCC;
+            --secondary: #FF0055;
+            --bg: #0D0D0D;
+            --card-bg: #1A1A1A;
+            --text: #E0E0E0;
+            --text-muted: #888888;
+            --gold: #FFD700;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace; /* 终端黑客风 */
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 204, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 204, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 90%;
+            max-width: 550px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 扫描线特效 */
+        .container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.5em;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #333;
+            margin-bottom: 25px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            transition: width 0.5s ease;
+        }
+
+        .clue-box {
+            min-height: 120px;
+            margin-bottom: 25px;
+        }
+
+        .clue-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 20px;
+            border-left: 3px solid var(--primary);
+            padding-left: 15px;
+        }
+
+        .highlight {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            background-color: #000;
+            border: 1px solid #444;
+            color: var(--primary);
+            padding: 15px;
+            font-size: 1.1em;
+            font-family: inherit;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s;
+            text-transform: uppercase; 
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+
+        button {
+            background-color: #222;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 15px;
+            font-size: 1.1em;
+            font-family: inherit;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primary);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .options-grid button {
+            background-color: #1A1A1A;
+            border: 1px solid #333;
+            color: #E0E0E0;
+        }
+        
+        .options-grid button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: #222;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 0.9em;
+            height: 20px;
+        }
+
+        .feedback.error {
+            color: var(--secondary);
+            text-shadow: 0 0 5px var(--secondary);
+        }
+
+        .feedback.success {
+            color: var(--primary);
+        }
+
+        /* 错误震动动画 */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* 成功页面 */
+        .success-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(13, 13, 13, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            padding: 20px;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .success-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-title {
+            font-size: 2em;
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--primary);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<a href="../../index.html#treasure" aria-label="返回唱片店寻宝游戏区" style="position:fixed;top:12px;right:12px;z-index:1000;padding:9px 14px;border:2px solid #343334;border-radius:20px;background:#f6e4bf;color:#343334;text-decoration:none;font:700 13px sans-serif">← 返回唱片店</a>
+
+<div class="container" id="gameContainer">
+    <h1>[ 寻宝协议启动 ]</h1>
+    <div class="subtitle">根据地图线索，依次破解加密节点</div>
+    
+    <div class="progress-bar">
+        <div class="progress" id="progressBar"></div>
+    </div>
+
+    <div class="clue-box">
+        <div class="clue-text" id="clueText"></div>
+    </div>
+
+    <div id="interactionArea"></div>
+    <div class="feedback" id="feedback"></div>
+
+    <!-- 成功后的彩蛋画面 -->
+    <div class="success-overlay" id="successOverlay">
+        <div style="font-size: 4em; margin-bottom: 10px;">🏆</div>
+        <div class="success-title">ACCESS GRANTED</div>
+        <p style="color: var(--text-muted); line-height: 1.6;">
+            解密协议100%完成！<br>
+            你成功找到了藏在集装箱风箱里的宝物！<br><br>
+            系统检测到附近有<span class="highlight">猫条</span>掉落，<br>
+            请立刻拾取并犒劳寻宝功臣！🐈
+        </p >
+    </div>
+</div>
+
+<script>
+    // 游戏状态机
+    const gameData = [
+        {
+            id: 0,
+            clue: "系统初始化完成。<br>你现在身处<span class='highlight'>【宿舍】</span>。前方只有一条笔直的主路。<br>请问，为了寻找宝藏，你应该迈出哪个方向的第一步？",
+            type: "options",
+            options: ["向前走", "向后转", "向左拐", "向右拐"],
+            answer: "向前走",
+            progress: 10,
+            errorMsg: "【警告】脑电波异常。起点在宿舍，前方只有一条直路，向后或转弯只会撞墙。"
+        },
+        {
+            id: 1,
+            clue: "你踏上了主路。<br>行进途中，你的<span class='highlight'>左手边</span>出现了一座宏伟的建筑。<br>据说那里是异国文化与汉语言文化交融的知识殿堂。它的名字很长，包含了三个核心词汇：<span class='highlight'>国际</span>、<span class='highlight'>汉语</span>、<span class='highlight'>教学楼</span>。<br>请输入这座建筑的全称：",
+            type: "input",
+            answer: "国际汉语教学楼",
+            progress: 25,
+            errorMsg: "【错误】解码失败。提示：由“国际”、“汉语”、“教学楼”三个词组合而成的完整名称。"
+        },
+        {
+            id: 2,
+            clue: "你无视了左边的诱惑，继续向前。<br>此时你的<span class='highlight'>右手边</span>出现了一个区域。<br>那是灵感与图纸碰撞、艺术与创意交织的圣地，也是设计师们的聚集地。<br>请输入该区域的名称（四个字）：",
+            type: "input",
+            answer: "设计中心",
+            progress: 45,
+            errorMsg: "【错误】解码失败。提示：“设计”与“中心”的组合。"
+        },
+        {
+            id: 3,
+            clue: "探索进度过半，你感到一丝疲惫。<br>目光扫过路边，你注意到了一排停放整齐的两轮交通工具，它们有着专门的停靠区域。<br>请输入这种两轮交通工具的名称（三个字）：",
+            type: "input",
+            answer: "自行车",
+            progress: 60,
+            errorMsg: "【错误】解码失败。提示：一种靠脚踩踏板驱动的两轮交通工具。"
+        },
+        {
+            id: 4,
+            clue: "你终于来到了最终关卡。<br>前方是一个由铁皮拼凑而成的方形盒子（集装箱）。<br>你低头一看，角落里掉落了一根包装鲜艳的<span class='highlight'>猫条</span>。<br>包装上印着一串神秘的英文密码，这就是第一层通关的钥匙！<br>请输入包装上的英文（忽略大小写和空格）：",
+            type: "input",
+            answer: "SNACK CAT STRIPS",
+            progress: 75,
+            errorMsg: "【错误】密码错误！提示：仔细看猫条包装上的英文，由三个英文单词组成（SNACK... CAT... STRIPS...）。"
+        },
+        {
+            id: 5,
+            clue: "【密码验证通过】猫条上的编码已被成功破译。<br>然而，眼前并没有任何锁孔。你低头看着手中的猫条，又环顾了四周的地面和店铺，一无所获。<br>此时，一阵微风吹过，头顶传来了极其细微的‘呼呼’声。<br>你突然意识到：也许你一开始寻找的方向就错了。<br>线索提示：答案不在脚下，去寻找那个能‘吞吐清风’的铁盒子。<br>请问，你现在应该怎么做？",
+            type: "options",
+            options: ["继续低头寻找", "询问路人", "向左看", "抬头仰望"],
+            answer: "抬头仰望",
+            progress: 85,
+            errorMsg: "【错误】方向不对。宝物怎么会藏在平视就能看到的地方？仔细体会“吞吐清风”和“头顶传来声音”的暗示。"
+        },
+        {
+            id: 6,
+            clue: "你抬起头，视线越过集装箱的边缘。<br>在铁皮屋顶的侧面，固定着一个生锈的装置。它平时沉默不语，一旦运转就会发出呼呼的风声，为下方的店铺送去清风。<br>请输入这个装置的名称（两个字）：",
+            type: "input",
+            answer: "风箱",
+            progress: 95,
+            errorMsg: "【错误】解码失败。提示：装在集装箱上方，用来通风、鼓风排气的装置，两个字。"
+        },
+        {
+            id: 7,
+            clue: "正在打开最终宝箱...",
+            type: "final",
+            progress: 100
+        }
+    ];
+
+    let currentState = 0;
+
+    function renderState() {
+        const state = gameData[currentState];
+        const clueText = document.getElementById('clueText');
+        const interactionArea = document.getElementById('interactionArea');
+        const feedback = document.getElementById('feedback');
+        const progressBar = document.getElementById('progressBar');
+
+        feedback.innerText = '';
+        feedback.className = 'feedback';
+        progressBar.style.width = state.progress + '%';
+        clueText.innerHTML = state.clue;
+
+        interactionArea.innerHTML = '';
+        
+        if (state.type === 'options') {
+            const grid = document.createElement('div');
+            grid.className = 'options-grid';
+            state.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                grid.appendChild(btn);
+            });
+            interactionArea.appendChild(grid);
+        } else if (state.type === 'input') {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = '输入解码结果...';
+            input.id = 'answerInput';
+            input.onkeypress = (e) => { if (e.key === 'Enter') checkAnswer(input.value); };
+            
+            const btn = document.createElement('button');
+            btn.innerText = '确认解码';
+            btn.onclick = () => checkAnswer(input.value);
+            
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(btn);
+            interactionArea.appendChild(inputGroup);
+            input.focus();
+        } else if (state.type === 'final') {
+            document.getElementById('successOverlay').classList.add('show');
+        }
+    }
+
+    function checkAnswer(userAnswer) {
+        const state = gameData[currentState];
+        const feedback = document.getElementById('feedback');
+        const container = document.getElementById('gameContainer');
+        
+        if (!userAnswer || userAnswer.trim() === '') {
+            feedback.innerText = "【系统】请输入答案，空白无法解码。";
+            feedback.className = "feedback error";
+            return;
+        }
+
+        // 预处理：移除所有空格，全部转为大写进行匹配（兼容玩家大小写和空格输入错误）
+        const cleanAnswer = userAnswer.replace(/\s/g, '').toUpperCase();
+        const cleanCorrect = state.answer.replace(/\s/g, '').toUpperCase();
+
+        // 检查是否完全匹配 或 包含（防止输入错误符号）
+        if (cleanAnswer === cleanCorrect || cleanAnswer.includes(cleanCorrect)) {
+            feedback.innerText = "【解码成功】数据匹配... 正在前往下一节点...";
+            feedback.className = "feedback success";
+            
+            document.getElementById('interactionArea').innerHTML = '';
+            
+            setTimeout(() => {
+                currentState++;
+                renderState();
+            }, 800);
+            
+        } else {
+            feedback.innerText = state.errorMsg;
+            feedback.className = "feedback error";
+            
+            container.classList.add('shake');
+            setTimeout(() => {
+                container.classList.remove('shake');
+            }, 500);
+        }
+    }
+
+    // 初始化游戏
+    renderState();
+</script>
+
+</body>
+</html>
